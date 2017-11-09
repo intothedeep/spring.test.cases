@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.free.test.file.dao.FileDao">
+    <insert id="store" parameterType="fileDto">
+        insert 
+            into file_test (
+                FILESEQ, ORIGINALFILENAME, STOREDFILENAME, 
+                FILESIZE, UPLOADDATE, DELETED, EMAIL, BCODE, storedPath,
+                thumbStoredFileName, thumbStoredPath,
+                originalfileseq
+                )
+            values(
+                #{fileSeq}, #{originalFileName}, #{storedFileName}, 
+                #{fileSize}, sysdate, #{deleted}, #{email}, 1, #{storedPath}, 
+                #{thumbStoredFileName}, #{thumbStoredPath},
+                #{originalFileSeq}
+                )
+    </insert>
+    
+    <select id="list" parameterType="int" resultType="fileDto">
+        <![CDATA[
+        select *
+        from file_test
+        where bcode = #{bcode} and
+              deleted != 1
+        order by originalFileSeq desc
+        ]]>
+    </select>
+    
+    <select id="getFileInfo" parameterType="int" resultType="fileDto">
+        select *
+        from file_test
+        where fileseq = #{fileSeq}
+    </select>
+    
+    <update id="deleteUpdatedToOne" parameterType="int">
+        update file_test
+        set deleted = 1
+        where fileseq = #{fileSeq}
+    </update>
+</mapper>
